@@ -53,7 +53,8 @@ if (-not (Get-Command py -ErrorAction SilentlyContinue)) {
 $devDir = Join-Path $env:CommonProgramFiles "Adobe\UXP\Developer"
 New-Item -ItemType Directory -Force -Path $devDir | Out-Null
 $settings = Join-Path $devDir "settings.json"
-Set-Content -Path $settings -Value '{ "developer": true }' -Encoding UTF8
+$settingsJson = @{ developer = $true } | ConvertTo-Json
+Set-Content -Path $settings -Value $settingsJson -Encoding UTF8
 Write-Host "[2/6] UXP Developer Mode yoqildi." -ForegroundColor Green
 
 if (-not (Test-Path ".venv\Scripts\python.exe")) {
