@@ -119,3 +119,5 @@ Write-Host "2. $Root"
 Write-Host "3. Load & Watch"
 Write-Host "4. After Effects -> Window -> Husan Reels Master"
 Write-Host "5. Video layerni tanlang -> AUTO MONTAGE"
+
+}
