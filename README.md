@@ -1,28 +1,52 @@
 # Husan Reels Master
 
-Minimal After Effects UXP panel for fast Reels workflows.
+One-click local AI montage for After Effects.
 
-## Current features
+Select a video layer, press AUTO MONTAGE, and the local engine transcribes, cuts pauses, reframes to 9:16, adds captions, applies a subtle moving crop, renders MP4, and imports the finished Reel back into After Effects.
 
-- Create 1080×1920 / 30fps composition
-- Center selected layers
-- Fit selected layers to frame
-- Add clean subtitle text
-- Center text layers
-- Apply minimal white text styling
-- Stagger selected layers by 0.08s
-- Apply a quick 0.18s fade-in
+## Architecture
 
-## Requirements
+After Effects UXP panel -> localhost:8765 -> Python/Faster-Whisper + FFmpeg -> finished MP4 -> After Effects.
 
-- Adobe After Effects 27.0 or newer
-- UXP Developer Tool for loading the plugin during development
+The video stays on the computer.
 
-## Project structure
+## Windows setup
 
-- manifest.json — UXP plugin manifest
-- index.html — panel UI
-- style.css — minimal dark UI
-- main.js — After Effects automation
+1. Install Python 3.11.
+2. Install FFmpeg and make sure ffmpeg and ffprobe work in CMD.
+3. Open the plugin folder.
+4. Run start_server.bat.
+5. Load the UXP plugin in Adobe UXP Developer Tool.
+6. Open After Effects and select a video layer.
+7. Press AUTO MONTAGE.
 
-Adobe's current After Effects API exposes the host application through the UXP `aftereffects` module.
+The first run downloads the Whisper model and can take a while. Later runs reuse the local model.
+
+## Current automatic pipeline
+
+- local Faster-Whisper transcription
+- word-level timestamps
+- smart dead-air removal
+- 9:16 vertical output
+- subtle moving crop / punch-in
+- caption rendering
+- H.264/AAC MP4
+- automatic import into the active AE composition
+
+## Open-source research
+
+The architecture was informed by open-source local video-editing projects including QMM AutoEdit, AutoClip Core, Cut/Storm, and After Effects AutoCaptions. Their documented approaches helped shape the pipeline.
+
+We do not copy arbitrary repositories wholesale. Only code whose license and compatibility permit reuse should be incorporated directly; otherwise the same idea is implemented independently.
+
+## Roadmap
+
+- face-aware reframing
+- real word-by-word karaoke highlight
+- filler-word detection
+- retake detection
+- automatic hook selection
+- beat/SFX sync
+- B-roll slots
+- more motion presets
+- direct AE motion-layer generation
