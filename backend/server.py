@@ -36,6 +36,10 @@ def transcribe(path):
                 words.append({"word": w.word.strip(), "start": float(w.start), "end": float(w.end)})
     return words
 
+FILLERS={"um","uh","erm","like","basically","actually"}
+def remove_fillers(words):
+    return [w for w in words if w["word"].lower().strip(".,!?") not in FILLERS]
+
 def build_keep_ranges(words, duration, max_pause=0.85, pad=0.06):
     if not words:
         return [(0, duration)]
@@ -59,7 +63,7 @@ def render_cut(input_path, ranges, out):
     for i,(a,b) in enumerate(ranges):
         p=work/f"p{i:04d}.mp4"
         run(["ffmpeg","-y","-ss",str(a),"-to",str(b),"-i",input_path,
-             "-an","-c:v","libx264","-preset","veryfast","-crf","20","-pix_fmt","yuv420p",str(p)])
+             "-c:v","libx264","-preset","veryfast","-crf","20","-pix_fmt","yuv420p","-c:a","aac","-b:a","160k",str(p)])
         parts.append(p)
     lst=work/"list.txt"
     lst.write_text("\n".join("file '"+p.as_posix().replace("'","'\\''")+"'" for p in parts),encoding="utf-8")
@@ -79,7 +83,11 @@ def make_ass(words, path):
     while i<len(words):
         chunk=words[i:i+5]
         start=chunk[0]["start"]; end=chunk[-1]["end"]
-        text=" ".join(w["word"] for w in chunk)
+        parts=[]
+        for w in chunk:
+            dur=max(1,int((w["end"]-w["start"])*100))
+            parts.append("{\\\\k%d}%s" % (dur,w["word"]))
+        text=" ".join(parts)
         lines.append(f"Dialogue: 0,{ass_time(start)},{ass_time(end)},Husan,,0,0,0,,{text}")
         i+=5
     Path(path).write_text("\n".join(lines),encoding="utf-8")
@@ -105,7 +113,8 @@ def pipeline(req):
     yield {"progress":10,"message":"Transcribing with local Whisper…"}
     words=transcribe(str(src))
     yield {"progress":40,"message":"Building smart cuts…"}
-    ranges=build_keep_ranges(words,duration,0.65 if req.mode=="smart" else 1.1)
+    clean_words=remove_fillers(words) if req.mode=="smart" else words
+    ranges=build_keep_ranges(clean_words,duration,0.65 if req.mode=="smart" else 1.1)
     render_cut(str(src),ranges,str(cut))
     if req.captions:
         yield {"progress":58,"message":"Creating word-level captions…"}
