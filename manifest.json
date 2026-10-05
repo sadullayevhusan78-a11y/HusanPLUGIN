@@ -1,0 +1,22 @@
+{
+  "manifestVersion": 5,
+  "id": "com.husan.reelsmaster",
+  "name": "Husan Reels Master",
+  "version": "0.1.0",
+  "description": "Minimal After Effects panel for fast vertical Reels workflows.",
+  "main": "index.html",
+  "host": {
+    "app": "aftereffects",
+    "minVersion": "27.0.0"
+  },
+  "entrypoints": [
+    {
+      "id": "reelsMasterPanel",
+      "type": "panel",
+      "label": { "default": "Husan Reels Master" },
+      "minimumSize": { "width": 280, "height": 460 },
+      "preferredDockedSize": { "width": 320, "height": 560 },
+      "preferredFloatingSize": { "width": 360, "height": 620 }
+    }
+  ]
+}
