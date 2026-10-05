@@ -261,13 +261,28 @@ try {
     }
 
     Write-Step "[7/8] UXP Developer Mode va Local AI Engine tayyorlanmoqda..."
-    $devDir = Join-Path $env:CommonProgramFiles "Adobe\UXP\Developer"
-    New-Item -ItemType Directory -Path $devDir -Force | Out-Null
 
+    # UXP Developer Mode requires administrator privileges when writing
+    # %CommonProgramFiles%\Adobe\UXP\Developer\settings.json.
+    # Do not fail the whole installer if PowerShell is not elevated.
+    # Adobe UXP Developer Tool can enable Developer Mode itself on first launch.
+    $devDir = Join-Path $env:CommonProgramFiles "Adobe\UXP\Developer"
     $settings = Join-Path $devDir "settings.json"
-    $settingsJson = @{ developer = $true } | ConvertTo-Json
-    Set-Content -LiteralPath $settings -Value $settingsJson -Encoding UTF8
-    Write-Ok "UXP Developer Mode konfiguratsiyasi yozildi."
+    $settingsWritten = $false
+
+    try {
+        if (-not (Test-Path -LiteralPath $devDir)) {
+            New-Item -ItemType Directory -Path $devDir -Force -ErrorAction Stop | Out-Null
+        }
+
+        $settingsJson = @{ developer = $true } | ConvertTo-Json
+        Set-Content -LiteralPath $settings -Value $settingsJson -Encoding UTF8 -ErrorAction Stop
+        $settingsWritten = $true
+        Write-Ok "UXP Developer Mode konfiguratsiyasi yozildi."
+    } catch {
+        Write-Warn "UXP Developer Mode avtomatik yoqilmadi: $($_.Exception.Message)"
+        Write-Host "UDT ochilganda Enable Developer Mode tugmasini bosing." -ForegroundColor Yellow
+    }
 
     $healthOk = $false
     try {
