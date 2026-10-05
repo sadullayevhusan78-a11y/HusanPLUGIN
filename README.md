@@ -2,47 +2,67 @@
 
 One-click local AI montage for After Effects.
 
-Select a video layer, press AUTO MONTAGE, and the local engine transcribes, cuts pauses, reframes to 9:16, adds captions, applies a subtle moving crop, renders MP4, and imports the finished Reel back into After Effects.
+## Eng oson o'rnatish — bitta PowerShell komandasi
 
-## Architecture
+PowerShellni oching va shuni **to'liq** qo'ying:
+
+```powershell
+Set-ExecutionPolicy -Scope Process Bypass; iwr "https://raw.githubusercontent.com/sadullayevhusan78-a11y/HusanPLUGIN/main/install.ps1" -OutFile "$env:TEMP\husan-install.ps1"; & "$env:TEMP\husan-install.ps1"
+```
+
+Installer avtomatik:
+
+- GitHubdan pluginni `Documents\Husan Reels Master` papkasiga clone qiladi
+- keyingi ishga tushirishlarda `git pull --ff-only` bilan yangilaydi
+- UXP Developer Mode'ni yoqadi
+- Python virtual environment yaratadi
+- AI engine dependencylarini o'rnatadi
+- FFmpeg/ffprobe'ni tekshiradi va Winget mavjud bo'lsa o'rnatishga urinadi
+- local AI serverni ishga tushiradi
+- UXP Developer Tool o'rnatilgan bo'lsa ochadi
+
+### After Effectsga birinchi ulash
+
+Adobe UXP'ning development workflow'i sabab birinchi marta UXP Developer Tool ichida:
+
+1. **Add Plugin**
+2. `Documents\Husan Reels Master` papkasini tanlang
+3. **Load & Watch**
+4. After Effectsni oching
+5. **Husan Reels Master** panelini oching
+
+Keyin video layerni tanlab **AUTO MONTAGE** bosing.
+
+> Muhim: PowerShell plugin fayllarini avtomatik tayyorlaydi va UDTni ochadi, lekin Adobe'ning development pluginini AE'ga birinchi marta yuklash bosqichi UXP Developer Tool orqali qilinadi.
+
+## Nima qiladi
 
 After Effects UXP panel -> localhost:8765 -> Python/Faster-Whisper + FFmpeg -> finished MP4 -> After Effects.
 
-The video stays on the computer.
+Video lokal kompyuterda qoladi.
 
-## Windows setup
-
-1. Install Python 3.11.
-2. Install FFmpeg and make sure ffmpeg and ffprobe work in CMD.
-3. Open the plugin folder.
-4. Run start_server.bat.
-5. Load the UXP plugin in Adobe UXP Developer Tool.
-6. Open After Effects and select a video layer.
-7. Press AUTO MONTAGE.
-
-The first run downloads the Whisper model and can take a while. Later runs reuse the local model.
-
-## Current automatic pipeline
+Current pipeline:
 
 - local Faster-Whisper transcription
 - word-level timestamps
 - smart dead-air removal
 - 9:16 vertical output
-- subtle moving crop / punch-in
+- moving crop / punch-in
 - caption rendering
 - H.264/AAC MP4
-- automatic import into the active AE composition
+- automatic import into active AE composition
+- basic AE motion presets
 
 ## Open-source research
 
-The architecture was informed by open-source local video-editing projects including QMM AutoEdit, AutoClip Core, Cut/Storm, and After Effects AutoCaptions. Their documented approaches helped shape the pipeline.
+Architecture was informed by open-source local video-editing projects including QMM AutoEdit, AutoClip Core, Cut/Storm, and After Effects AutoCaptions.
 
-We do not copy arbitrary repositories wholesale. Only code whose license and compatibility permit reuse should be incorporated directly; otherwise the same idea is implemented independently.
+We do not copy arbitrary repositories wholesale. Only license-compatible code may be reused directly; otherwise the idea is implemented independently. Third-party notices/licenses should be preserved when their code is incorporated.
 
 ## Roadmap
 
 - face-aware reframing
-- real word-by-word karaoke highlight
+- stronger word-by-word karaoke highlight
 - filler-word detection
 - retake detection
 - automatic hook selection
