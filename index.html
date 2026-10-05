@@ -1,42 +1,6 @@
-<!doctype html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <title>Husan Reels Master</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <main class="panel">
-    <header>
-      <div>
-        <div class="eyebrow">HUSAN</div>
-        <h1>Reels Master</h1>
-      </div>
-      <span class="version">0.1</span>
-    </header>
-
-    <section class="card">
-      <div class="section-title">REELS</div>
-      <button id="createReels">Create 1080 × 1920</button>
-      <button id="centerSelected">Center selected</button>
-      <button id="fitSelected">Fit selected to frame</button>
-    </section>
-
-    <section class="card">
-      <div class="section-title">TEXT</div>
-      <button id="addText">Add clean subtitle</button>
-      <button id="centerText">Center text layer</button>
-      <button id="styleText">Minimal text style</button>
-    </section>
-
-    <section class="card">
-      <div class="section-title">MOTION</div>
-      <button id="stagger">Stagger selected layers</button>
-      <button id="fade">Quick fade selected</button>
-    </section>
-
-    <div id="status" class="status">Ready.</div>
-  </main>
-  <script src="main.js"></script>
-</body>
-</html>
+<!doctype html><html><head><meta charset="UTF-8"><title>Husan Reels Master</title><link rel="stylesheet" href="style.css"></head><body>
+<main class="panel"><header><div><div class="eyebrow">HUSAN / LOCAL AI</div><h1>Reels Master</h1></div><span class="version">0.2</span></header>
+<section class="hero"><button id="autoEdit" class="primary"><span class="play">▶</span>AUTO MONTAGE</button><div class="hint">Select a video layer, then press once.</div></section>
+<section class="card"><div class="section-title">STYLE</div><div class="row"><label>Format</label><select id="format"><option value="reels">9:16 Reels</option></select></div><div class="row"><label>Captions</label><select id="captions"><option value="on">Word-by-word</option><option value="off">Off</option></select></div><div class="row"><label>Cut</label><select id="cut"><option value="smart">Smart</option><option value="clean">Clean</option></select></div></section>
+<section class="card"><div class="section-title">TOOLS</div><button id="createReels">Create 1080 × 1920</button><button id="centerSelected">Center selected</button><button id="fitSelected">Fit selected to frame</button><button id="addText">Add clean subtitle</button></section>
+<div id="progressWrap" class="progress-wrap"><div class="progress"><div id="bar"></div></div><div id="progressText">Preparing…</div></div><div id="status" class="status">Local engine: checking…</div></main><script src="main.js"></script></body></html>
